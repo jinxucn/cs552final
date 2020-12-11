@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-11 21:06:20
- * @LastEditTime: 2020-12-11 21:10:05
+ * @LastEditTime: 2020-12-11 22:49:42
  */
 package edu.rutgers.cs552.im.server.handler;
 
@@ -31,6 +31,9 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
     @Autowired
     private NettyServerHandler nettyServerHandler;
 
+    @Autowired
+    private NettyToDaoHandler nettyToDaoHandler;
+
     @Override
     protected void initChannel(Channel ch) {
         // 获得 Channel 对应的 ChannelPipeline
@@ -45,6 +48,8 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
                 // .addLast(new InvocationDecoder())
                 // 消息分发器
                 // .addLast(messageDispatcher)
+                // 后端Dao接口
+                .addLast(nettyToDaoHandler)
                 // 服务端处理器
                 .addLast(nettyServerHandler)
         ;

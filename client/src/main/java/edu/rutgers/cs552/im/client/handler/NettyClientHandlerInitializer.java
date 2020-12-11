@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-11 11:49:29
- * @LastEditTime: 2020-12-11 21:04:19
+ * @LastEditTime: 2020-12-11 22:42:49
  */
 package edu.rutgers.cs552.im.client.handler;
 
@@ -29,6 +29,9 @@ public class NettyClientHandlerInitializer extends ChannelInitializer<Channel> {
     @Autowired
     private NettyClientHandler nettyClientHandler;
 
+    @Autowired
+    private NettyToFrontEndHandler nettyToFrontEndHandler;
+
     @Override
     protected void initChannel(Channel ch) {
         ch.pipeline()
@@ -41,6 +44,8 @@ public class NettyClientHandlerInitializer extends ChannelInitializer<Channel> {
                 // .addLast(new InvocationDecoder())
                 // 消息分发器
                 // .addLast(messageDispatcher)
+                // 前端webSocket接口
+                .add(nettyToFrontEndHandler)
                 // 客户端处理器
                 .addLast(nettyClientHandler)
         ;
