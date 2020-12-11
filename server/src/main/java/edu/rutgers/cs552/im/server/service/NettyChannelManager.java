@@ -142,4 +142,13 @@ public class NettyChannelManager {
         }
     }
 
+    /**
+     * 查找用户是否在线
+     *
+     * @param user 用户
+     */
+    public boolean isActive(String user){
+        return userChannels.containsKey(user)&&userChannels.get(user).isActive();
+    }
+
 }
