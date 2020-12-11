@@ -31,6 +31,9 @@ public class NettyClient {
     @Value("${netty.server.port}")
     private Integer serverPort;
 
+    @Resource
+    private ApplicationArguments arguments;
+
     @Autowired
     private NettyClientHandlerInitializer nettyClientHandlerInitializer;
 
