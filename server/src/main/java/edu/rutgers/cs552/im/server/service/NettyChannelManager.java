@@ -1,6 +1,6 @@
 package edu.rutgers.cs552.im.server.server;
 
-import edu.rutgers.cs552.im.common.codec.Invocation;
+// import edu.rutgers.cs552.im.common.codec.Invocation;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.util.AttributeKey;
@@ -86,7 +86,22 @@ public class NettyChannelManager {
      * @param user 用户
      * @param invocation 消息体
      */
-    public void send(String user, Invocation invocation) {
+    // public void send(String user, Invocation invocation) {
+    //     // 获得用户对应的 Channel
+    //     Channel channel = userChannels.get(user);
+    //     if (channel == null) {
+    //         logger.error("[send][连接不存在]");
+    //         return;
+    //     }
+    //     if (!channel.isActive()) {
+    //         logger.error("[send][连接({})未激活]", channel.id());
+    //         return;
+    //     }
+    //     // 发送消息
+    //     channel.writeAndFlush(invocation);
+    // }
+
+    public void send(String user, String msg) {
         // 获得用户对应的 Channel
         Channel channel = userChannels.get(user);
         if (channel == null) {
@@ -98,7 +113,7 @@ public class NettyChannelManager {
             return;
         }
         // 发送消息
-        channel.writeAndFlush(invocation);
+        channel.writeAndFlush(msg.getBytes());
     }
 
     /**
@@ -106,14 +121,24 @@ public class NettyChannelManager {
      *
      * @param invocation 消息体
      */
-    public void sendAll(Invocation invocation) {
+    // public void sendAll(Invocation invocation) {
+    //     for (Channel channel : channels.values()) {
+    //         if (!channel.isActive()) {
+    //             logger.error("[send][连接({})未激活]", channel.id());
+    //             return;
+    //         }
+    //         // 发送消息
+    //         channel.writeAndFlush(invocation);
+    //     }
+    // }
+    public void sendAll(String msg) {
         for (Channel channel : channels.values()) {
             if (!channel.isActive()) {
                 logger.error("[send][连接({})未激活]", channel.id());
                 return;
             }
             // 发送消息
-            channel.writeAndFlush(invocation);
+            channel.writeAndFlush(msg.getBytes());
         }
     }
 

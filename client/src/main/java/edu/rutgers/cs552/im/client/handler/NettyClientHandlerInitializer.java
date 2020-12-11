@@ -1,13 +1,13 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-11 11:49:29
- * @LastEditTime: 2020-12-11 11:58:02
+ * @LastEditTime: 2020-12-11 21:04:19
  */
-package edu.rutgers.cs552.im.client.client.handler;
+package edu.rutgers.cs552.im.client.handler;
 
-import edu.rutgers.cs552.im.common.codec.InvocationDecoder;
-import edu.rutgers.cs552.im.common.codec.InvocationEncoder;
-import edu.rutgers.cs552.im.common.dispatcher.MessageDispatcher;
+// import edu.rutgers.cs552.im.common.codec.InvocationDecoder;
+// import edu.rutgers.cs552.im.common.codec.InvocationEncoder;
+// import edu.rutgers.cs552.im.common.dispatcher.MessageDispatcher;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -23,8 +23,8 @@ public class NettyClientHandlerInitializer extends ChannelInitializer<Channel> {
      */
     private static final Integer READ_TIMEOUT_SECONDS = 60;
 
-    @Autowired
-    private MessageDispatcher messageDispatcher;
+    // @Autowired
+    // private MessageDispatcher messageDispatcher;
 
     @Autowired
     private NettyClientHandler nettyClientHandler;
@@ -36,11 +36,11 @@ public class NettyClientHandlerInitializer extends ChannelInitializer<Channel> {
                 .addLast(new IdleStateHandler(READ_TIMEOUT_SECONDS, 0, 0))
                 .addLast(new ReadTimeoutHandler(3 * READ_TIMEOUT_SECONDS))
                 // 编码器
-                .addLast(new InvocationEncoder())
+                // .addLast(new InvocationEncoder())
                 // 解码器
-                .addLast(new InvocationDecoder())
+                // .addLast(new InvocationDecoder())
                 // 消息分发器
-                .addLast(messageDispatcher)
+                // .addLast(messageDispatcher)
                 // 客户端处理器
                 .addLast(nettyClientHandler)
         ;

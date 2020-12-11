@@ -1,6 +1,11 @@
-package edu.rutgers.cs552.im.server.server;
+/*
+ * @Author: Jin X
+ * @Date: 2020-12-11 21:06:13
+ * @LastEditTime: 2020-12-11 21:13:40
+ */
+package edu.rutgers.cs552.im.server.service;
 
-import edu.rutgers.cs552.im.server.server.handler.NettyServerHandlerInitializer;
+import edu.rutgers.cs552.im.server.handler.NettyServerHandlerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

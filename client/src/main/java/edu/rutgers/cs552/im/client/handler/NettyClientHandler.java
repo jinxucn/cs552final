@@ -1,8 +1,8 @@
-package edu.rutgers.cs552.im.client.client.handler;
+package edu.rutgers.cs552.im.client.handler;
 
-import edu.rutgers.cs552.im.client.client.NettyClient;
-import edu.rutgers.cs552.im.client.message.heartbeat.HeartbeatRequest;
-import edu.rutgers.cs552.im.common.codec.Invocation;
+import edu.rutgers.cs552.im.client.service.NettyClient;
+// import edu.rutgers.cs552.im.client.message.heartbeat.HeartbeatRequest;
+// import edu.rutgers.cs552.im.common.codec.Invocation;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -42,9 +42,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         // 空闲时，向服务端发起一次心跳
         if (event instanceof IdleStateEvent) {
             logger.info("[userEventTriggered][发起一次心跳]");
-            HeartbeatRequest heartbeatRequest = new HeartbeatRequest();
-            ctx.writeAndFlush(new Invocation(HeartbeatRequest.TYPE, heartbeatRequest))
-                    .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+            // HeartbeatRequest heartbeatRequest = new HeartbeatRequest();
+            // ctx.writeAndFlush(new Invocation(HeartbeatRequest.TYPE, heartbeatRequest))
+                    // .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         } else {
             super.userEventTriggered(ctx, event);
         }

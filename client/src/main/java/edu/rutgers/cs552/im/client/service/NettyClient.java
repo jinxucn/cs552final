@@ -1,7 +1,7 @@
-package edu.rutgers.cs552.im.client.client;
+package edu.rutgers.cs552.im.client.service;
 
-import edu.rutgers.cs552.im.client.client.handler.NettyClientHandlerInitializer;
-import edu.rutgers.cs552.im.common.codec.Invocation;
+import edu.rutgers.cs552.im.client.service.handler.NettyClientHandlerInitializer;
+// import edu.rutgers.cs552.im.common.codec.Invocation;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -31,8 +31,8 @@ public class NettyClient {
     @Value("${netty.server.port}")
     private Integer serverPort;
 
-    @Resource
-    private ApplicationArguments arguments;
+    // @Resource
+    // private ApplicationArguments arguments;
 
     @Autowired
     private NettyClientHandlerInitializer nettyClientHandlerInitializer;
@@ -112,7 +112,8 @@ public class NettyClient {
      *
      * @param invocation 消息体
      */
-    public void send(Invocation invocation) {
+
+    public void send(String msg){
         if (channel == null) {
             logger.error("[send][连接不存在]");
             return;
@@ -122,7 +123,20 @@ public class NettyClient {
             return;
         }
         // 发送消息
-        channel.writeAndFlush(invocation);
+        channel.writeAndFlush(msg.getBytes());
     }
+    
+    // public void send(Invocation invocation) {
+    //     if (channel == null) {
+    //         logger.error("[send][连接不存在]");
+    //         return;
+    //     }
+    //     if (!channel.isActive()) {
+    //         logger.error("[send][连接({})未激活]", channel.id());
+    //         return;
+    //     }
+    //     // 发送消息
+    //     channel.writeAndFlush(invocation);
+    // }
 
 }
