@@ -1,0 +1,52 @@
+<!--
+ * @Author: Jin X
+ * @Date: 2020-12-12 12:23:51
+ * @LastEditTime: 2020-12-12 14:00:53
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>webpage to netty api test</title>
+  </head>
+  <body>
+    <h1>Input:</h1>
+    <input id="input" type="text"></input>
+    <br>
+    <button id="submit">submit</button>
+    <h1>Output:</h1>
+  </body>
+  <script type="text/javascript">
+    let websocket = null;
+    window.onload = function(){
+      if(!window.WebSocket){
+        alter("Not support websocket");
+        return;
+      }
+      let input = document.querySelector("#input");
+      let submit = document.querySelector("#submit");
+      
+      websocket = new WebSocket("ws://localhost:8080/ws");
+
+      websocket.onerror = ()=> print("Error");
+      websocket.onopen = ()=> print("Open");
+      websocket.onmessage = (event)=> print(event.data);
+      websocket.onclose = ()=> print("Close");
+      window.onbeforeunload = ()=> websocket.close();
+
+      submit.onclick = ()=> {
+        websocket.send(input.value);
+        input.value = "";
+      }
+
+      input.onkeydown = (e)=>{
+        if(e.keyCode == "13")
+          submit.click();
+      }
+      function print(msg){
+        let p = document.createElement("p");
+        p.innerText = msg;
+        document.querySelector("body").appendChild(p);
+      }
+    }
+  </script>
+</html>

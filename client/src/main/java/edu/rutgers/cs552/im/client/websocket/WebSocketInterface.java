@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-11 19:55:26
- * @LastEditTime: 2020-12-12 14:03:03
+ * @LastEditTime: 2020-12-12 14:40:28
  */
 
 package edu.rutgers.cs552.im.client.websocket;
@@ -33,8 +33,12 @@ public class WebSocketInterface{
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static NettyClient nettyClient;
+
     @Autowired
-    private NettyClient nettyClient;
+    public void setNettyClient(NettyClient nettyClient){
+        WebSocketInterface.nettyClient = nettyClient;
+    }
 
     @OnOpen
     public void onOpen(Session session) throws IOException{
@@ -52,9 +56,6 @@ public class WebSocketInterface{
 
     @OnMessage
     public void onMessage(String message) throws IOException{
-        // System.out.println("Get message: "+message);
-        // sendMessage("This is a message");
-        // Invocation invocation = new Invocation(type, message);
         // // 发送消息
         logger.info("WebSocket send to nettyClient: "+message);
         nettyClient.send(message);
