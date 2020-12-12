@@ -1,6 +1,6 @@
 package edu.rutgers.cs552.im.client.service;
 
-import edu.rutgers.cs552.im.client.service.handler.NettyClientHandlerInitializer;
+import edu.rutgers.cs552.im.client.handler.NettyClientHandlerInitializer;
 // import edu.rutgers.cs552.im.common.codec.Invocation;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
