@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-11 19:55:26
- * @LastEditTime: 2020-12-11 22:30:41
+ * @LastEditTime: 2020-12-12 14:03:03
  */
 
 package edu.rutgers.cs552.im.client.websocket;
@@ -17,6 +17,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.lang.Throwable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,6 @@ public class WebSocketInterface{
 
     @OnOpen
     public void onOpen(Session session) throws IOException{
-        // System.out.println("WebSocket On!");
         if(_isInitialized)
             return;
         logger.info("WebSocket on");
@@ -47,20 +47,26 @@ public class WebSocketInterface{
 
     @OnClose
     public void onClose(){
-        // System.out.println("WebSocket Close!");
         logger.info("WebSocket close");
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException{
+    public void onMessage(String message) throws IOException{
         // System.out.println("Get message: "+message);
         // sendMessage("This is a message");
         // Invocation invocation = new Invocation(type, message);
         // // 发送消息
-        // nettyClient.send(invocation);
+        logger.info("WebSocket send to nettyClient: "+message);
+        nettyClient.send(message);
+    }
+
+    @OnError
+    public void onError(Session session, Throwable error) {
+        error.printStackTrace();
     }
 
     public void sendMessage(String message) throws IOException {
         _session.getBasicRemote().sendText(message);
+        logger.info("WebSocket send to webpage: "+message);
     }
 }

@@ -113,7 +113,7 @@ public class NettyChannelManager {
             return;
         }
         // 发送消息
-        channel.writeAndFlush(msg.getBytes());
+        channel.writeAndFlush(msg);
     }
 
     /**
@@ -138,7 +138,7 @@ public class NettyChannelManager {
                 return;
             }
             // 发送消息
-            channel.writeAndFlush(msg.getBytes());
+            channel.writeAndFlush(msg);
         }
     }
 

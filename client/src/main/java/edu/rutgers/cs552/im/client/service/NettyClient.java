@@ -123,7 +123,7 @@ public class NettyClient {
             return;
         }
         // 发送消息
-        channel.writeAndFlush(msg.getBytes());
+        channel.writeAndFlush(msg);
     }
     
     // public void send(Invocation invocation) {
