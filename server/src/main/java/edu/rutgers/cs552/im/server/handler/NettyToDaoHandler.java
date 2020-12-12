@@ -25,8 +25,8 @@ public class NettyToDaoHandler extends SimpleChannelInboundHandler {
     private Dao dao;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg){
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         
-        dao.handleMessage(ctx.channel(), msg);
+        dao.handleMessage(ctx.channel(), String.valueOf(msg));
     }
 }

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 // import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.rutgers.cs552.im.client.service.NettyClient;
+
 
 
 
@@ -28,7 +30,7 @@ public class SendMsgController {
     private NettyClient nettyClient;
 
     @PostMapping("/netty")
-    public String (){
+    public String test(){
 
         return "success";
     }

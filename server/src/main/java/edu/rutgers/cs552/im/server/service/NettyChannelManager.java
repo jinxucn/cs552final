@@ -1,4 +1,4 @@
-package edu.rutgers.cs552.im.server.server;
+package edu.rutgers.cs552.im.server.service;
 
 // import edu.rutgers.cs552.im.common.codec.Invocation;
 import io.netty.channel.Channel;

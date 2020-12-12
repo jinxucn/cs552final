@@ -45,7 +45,7 @@ public class NettyClientHandlerInitializer extends ChannelInitializer<Channel> {
                 // 消息分发器
                 // .addLast(messageDispatcher)
                 // 前端webSocket接口
-                .add(nettyToFrontEndHandler)
+                .addLast(nettyToFrontEndHandler)
                 // 客户端处理器
                 .addLast(nettyClientHandler)
         ;

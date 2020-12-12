@@ -16,6 +16,8 @@ import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+
 @Component
 @ChannelHandler.Sharable
 public class NettyToFrontEndHandler extends SimpleChannelInboundHandler<String> {
@@ -25,7 +27,7 @@ public class NettyToFrontEndHandler extends SimpleChannelInboundHandler<String> 
     private WebSocketInterface webSocketInterface;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg){
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws IOException {
         
         webSocketInterface.sendMessage(msg);
     }
