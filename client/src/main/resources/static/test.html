@@ -1,7 +1,7 @@
 <!--
  * @Author: Jin X
  * @Date: 2020-12-12 12:23:51
- * @LastEditTime: 2020-12-12 14:00:53
+ * @LastEditTime: 2020-12-14 22:09:56
 -->
 <!DOCTYPE html>
 <html>
@@ -19,7 +19,7 @@
     let websocket = null;
     window.onload = function(){
       if(!window.WebSocket){
-        alter("Not support websocket");
+        alert("Not support websocket");
         return;
       }
       let input = document.querySelector("#input");
