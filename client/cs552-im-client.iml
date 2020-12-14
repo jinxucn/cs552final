@@ -61,6 +61,5 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-messaging:5.2.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-websocket:5.2.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-all:4.1.50.Final" level="project" />
-    <orderEntry type="library" name="Maven: edu.rutgers.cs552.im:cs552-im-common:1.0-SNAPSHOT" level="project" />
   </component>
 </module>

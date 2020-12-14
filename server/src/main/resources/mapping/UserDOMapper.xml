@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.rutgers.cs552.im.server.dao.UserDOMapper">
+    <resultMap id="BaseResultMap" type="edu.rutgers.cs552.im.server.dataobject.UserDO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="userID" jdbcType="VARCHAR" property="userID" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, userID, password
+    </sql>
+    <insert id="insert" parameterType="edu.rutgers.cs552.im.server.dataobject.UserDO">
+        insert into user (id, userID, password)
+        values (#{id,jdbcType=INTEGER}, #{userID,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selectByUserID" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where userID = #{userID,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

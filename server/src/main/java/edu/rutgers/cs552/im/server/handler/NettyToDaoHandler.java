@@ -18,15 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 @ChannelHandler.Sharable
-public class NettyToDaoHandler extends SimpleChannelInboundHandler {
+public class NettyToDaoHandler extends SimpleChannelInboundHandler<String> {
 
     
     @Autowired    
     private Dao dao;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         
-        dao.handleMessage(ctx.channel(), String.valueOf(msg));
+        dao.handleMessage(ctx.channel(), msg);
     }
 }
