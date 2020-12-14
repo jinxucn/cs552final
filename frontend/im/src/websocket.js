@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 17:19:07
- * @LastEditTime: 2020-12-14 11:39:21
+ * @LastEditTime: 2020-12-14 22:34:42
  */
 
 import {handlers} from './Dispatcher'
@@ -12,12 +12,39 @@ if (!window.WebSocket)
 const websocket = new WebSocket("ws://localhost:8080/ws");
 // const websocket = {};
 
-websocket.onopen = () => console.log("WebSocket: On");
+
+const resetHearBeat = (function () {
+    let timer = 30;
+    let flag;
+    (function heartbeat() {
+        if (!timer) {
+            console.log("IMApp: lost heartbeat");
+            websocket.close();
+            clearTimeout(flag);
+        }
+        timer--;
+        flag = setTimeout(heartbeat, 1000);
+    })();
+    return () => timer = 30;
+})();
+
+websocket.onopen = () => {
+    console.log("WebSocket: On");
+    (function () {
+        let t = null;
+
+    })
+    websocket.send(JSON.stringify({ type: 0 }));
+};
+
 websocket.onclose = () => console.log("WebSocket: Close");
 websocket.onerror = () => console.log("WebSocket: Error");
 window.onbeforeunload = () => websocket.close();
 
 // websocket.send = (msg) => console.log("WebSocket send " + msg);
+function heartbeat() {
+
+}
 
 websocket.onmessage = function (res) {
     let resObj = JSON.parse(res);
@@ -28,8 +55,8 @@ websocket.onmessage = function (res) {
         websocket.close(0, resObj.reason);
         return;
     } else if (type == 0) {
-        console.log("Heartbeat");
-        websocket.send(JSON.stringify({ type: 0 }));
+        console.log("IMApp: receive heartbeat");
+        resetHearBeat();
         return;
     }
     handlers[type].call(null, resObj);

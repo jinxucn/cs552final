@@ -1,10 +1,10 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 16:55:41
- * @LastEditTime: 2020-12-14 11:41:17
+ * @LastEditTime: 2020-12-14 22:16:26
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import Container from './Container'
 import Login from './Login'
@@ -14,10 +14,6 @@ export default function IMApp() {
     
     const [userId, setUserId] = useState("");
 
-    useEffect(() => {
-        websocket.send({ type: 0 });
-        return () => websocket.close();
-    },[])
 
     return (
         <div className="IMapp">
