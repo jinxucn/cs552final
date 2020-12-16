@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-11 19:55:26
- * @LastEditTime: 2020-12-12 14:40:28
+ * @LastEditTime: 2020-12-16 19:22:56
  */
 
 package edu.rutgers.cs552.im.client.websocket;
@@ -68,6 +68,10 @@ public class WebSocketInterface{
 
     public void sendMessage(String message) throws IOException {
         _session.getBasicRemote().sendText(message);
-        logger.info("WebSocket send to webpage: "+message);
+        logger.info("WebSocket send to webpage: " + message);
+    }
+
+    public void close() throws IOException {
+        _session.close();
     }
 }
