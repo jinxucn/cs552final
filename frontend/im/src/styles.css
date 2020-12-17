@@ -103,6 +103,12 @@ ul, li{
 .friend-unread{
     background: rgba(187, 49, 37, 0.527);
 }
+.friend-unread:hover::after{
+    position: absolute;
+    content:"(unread)";
+    font-size:15px;
+    opacity: 0.7;
+}
 
 .friend:hover{
     cursor: pointer;

@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 20:36:10
- * @LastEditTime: 2020-12-17 20:36:01
+ * @LastEditTime: 2020-12-17 20:52:50
  */
 import React, { useEffect, useState } from "react";
 
@@ -51,6 +51,15 @@ export default function Container({ userId }){
                 ...prevUnRead,
                 [friendId]: true
             }))
+        else {
+            let obj = {
+                type: 5,
+                from: friendId,
+                to: userId
+            }
+            websocket.send(obj);
+        }
+
     }
     function sendReadReq(friendId) {
         setUnRead((prevUnRead) => {
