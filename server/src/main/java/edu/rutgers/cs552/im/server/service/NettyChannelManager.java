@@ -119,7 +119,7 @@ public class NettyChannelManager {
             OfflineDO offlineDO = new OfflineDO();
             offlineDO.setFromID(fromId);
             offlineDO.setToID(user);
-            offlineDO.setMessage(msg);
+            offlineDO.setMessage(message.getString("message"));
             offlineDO.setIs_sent(0);
             offlineDOMapper.insert(offlineDO);
             return;

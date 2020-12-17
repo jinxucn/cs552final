@@ -4,11 +4,14 @@
  * @LastEditTime: 2020-12-11 23:51:52
  */
 
-package edu.rutgers.cs552.im.server.dao;
+package edu.rutgers.cs552.im.server.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import edu.rutgers.cs552.im.server.dao.FriendDOMapper;
+import edu.rutgers.cs552.im.server.dao.OfflineDOMapper;
+import edu.rutgers.cs552.im.server.dao.UserDOMapper;
 import edu.rutgers.cs552.im.server.dataobject.FriendDO;
 import edu.rutgers.cs552.im.server.dataobject.OfflineDO;
 import edu.rutgers.cs552.im.server.dataobject.UserDO;
@@ -27,7 +30,7 @@ import java.util.List;
 
 
 @Component
-public class Dao{
+public class MessageHandler{
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -73,7 +76,6 @@ public class Dao{
             UserDO user = userDoMapper.selectByUserID(userid);
             if(user != null && user.getPassword().equals(password)){
                 nettyChannelManager.addUser(channel, userid);
-                forwardOfflineMessage(userid);
                 response.put("type", 1);
                 response.put("request", "accept");
                 channel.writeAndFlush(response.toJSONString());
@@ -99,7 +101,7 @@ public class Dao{
                 System.out.println(userid);
                 System.out.println(id1);
                 System.out.println(id2);
-                if(id1.equals(userid)){
+                if(id1.equals(userid.toLowerCase())){
                     friendList.add(id2);
                 }
                 else{
@@ -114,6 +116,7 @@ public class Dao{
             response.put("friendList", null);
             channel.writeAndFlush(response.toJSONString());
         }
+        forwardOfflineMessage(userid);
     }
 
 

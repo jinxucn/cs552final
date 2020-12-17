@@ -5,8 +5,6 @@
  */
 package edu.rutgers.cs552.im.server.handler;
 
-import edu.rutgers.cs552.im.server.dao.Dao;
-
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -22,11 +20,11 @@ public class NettyToDaoHandler extends SimpleChannelInboundHandler<String> {
 
     
     @Autowired    
-    private Dao dao;
+    private MessageHandler handler;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         
-        dao.handleMessage(ctx.channel(), msg);
+        handler.handleMessage(ctx.channel(), msg);
     }
 }
