@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 22:49:37
- * @LastEditTime: 2020-12-13 14:00:21
+ * @LastEditTime: 2020-12-16 18:39:36
  */
 import React, { useState, useEffect } from 'react';
 
@@ -57,7 +57,7 @@ export default function Login({ setLoginId}) {
                         if (t)
                             clearTimeout(t);
                         t = setTimeout(
-                            sendAuthRequest.bind(null, [userId, password]),
+                            sendAuthRequest.bind(null, userId, password),
                             300
                         )
                     }
