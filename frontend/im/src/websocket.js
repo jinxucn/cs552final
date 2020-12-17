@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 17:19:07
- * @LastEditTime: 2020-12-16 19:24:38
+ * @LastEditTime: 2020-12-17 20:53:33
  */
 
 import {handlers} from './Dispatcher'
@@ -48,7 +48,6 @@ window.onbeforeunload = () => websocket.close();
 
 websocket.onmessage = function (event) {
     let resObj = JSON.parse(event.data);
-    console.log(resObj);
     let type = resObj.type;
     if (type == -1) {
         // console.log("ERROR: " + resObj.reason);
