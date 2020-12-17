@@ -6,7 +6,7 @@ mybatis:
 spring:
   datasource:
     name: cs552
-    url: dbc:mysql://127.0.0.1:3306/cs552
+    url: jdbc:mysql://127.0.0.1:3306/cs552
     username: root
     password: mysql
     type: com.alibaba.druid.pool.DruidDataSource
