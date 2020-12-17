@@ -164,7 +164,35 @@ ul, li{
 .message-received{
     float: left;
 }
+.message-unread::before{
+    content:"";
+    position: absolute;
+    margin-left: -60px;
+    display: inline-block;
+    width:26px;
+    height:26px;
+    border: 2px dashed rgba(0,0,0,0.5);
+    border-radius: 26px;
+    animation: rotate 5s linear infinite; 
+}
 
+.message-read::before{
+    content:"Read";
+    position: absolute;
+    margin-left: -65px;
+    font-size: 17px;
+    line-height: 30px;
+    opacity: 0.5;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 .message-input{
     display:block;
     font-size: 30px;

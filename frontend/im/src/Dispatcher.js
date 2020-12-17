@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 17:29:41
- * @LastEditTime: 2020-12-12 22:17:49
+ * @LastEditTime: 2020-12-17 19:05:12
  */
 
 const msgTypes = {
@@ -9,13 +9,16 @@ const msgTypes = {
     // heartbeat:0,
     authenticate: 1,
     friendList: 2,
-    receiveMessage: 3
+    confirmSent: 3,
+    receiveMessage: 4,
+    confirmRead: 5
 };
 
 const handlers = {
     [msgTypes.authenticate]: null,
     [msgTypes.friendList]: null,
     [msgTypes.receiveMessage]: null,
+    [msgTypes.confirmRead]: null
 
 };
 

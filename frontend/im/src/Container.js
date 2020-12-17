@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 20:36:10
- * @LastEditTime: 2020-12-13 20:19:40
+ * @LastEditTime: 2020-12-17 20:36:01
  */
 import React, { useEffect, useState } from "react";
 
@@ -12,9 +12,23 @@ import websocket from './websocket'
 import { msgTypes, dispatcher } from './Dispatcher'
 
 export default function Container({ userId }){
-    
+
     const [friendOrMsg, setFriendOrMsg] = useState(true);
     const [currentFriend, setCurrentFriend] = useState("");
+
+    /**
+     * @description: toggle whether display friend list or message list
+     */
+    function toggleFOM() {
+        if (!friendOrMsg)
+            setCurrentFriend("");
+        setFriendOrMsg(!friendOrMsg);
+    }
+
+    /**
+     * @description: send a friend list request at the first time Container rendered
+     *               then update the friendList in callback
+     */
     const [friendList, setFriendList] = useState([]);
     // const [friendList, setFriendList] = useState([
     //     "friend1",
@@ -25,18 +39,12 @@ export default function Container({ userId }){
     // ]);
 
     const [msgMap, setMsgMap] = useState({});
-    // const [msgMap, setMsgMap] = useState({
-    //     "friend1": [
-    //         {'sent':"sent 123124124132434543"},
-    //         {'sent':"sent 53425dlfgjlsdkfglfgkjsdfg"},
-    //         {'received':"received kldfsgjo20flsfkdfsgfsd"},
-    //         {'sent':"sent asdfq4523049ewrj09web"},
-    //         {'sent':"sent skflskadf3"},
-    //     ]
-    // });
 
+    /**
+     * @description: control whether friend items have 'unread' class
+     *               use a map which is not good, should be rewritten in the future
+     */
     const [unRead, setUnRead] = useState({});
-
     function toggleUnRead(friendId) {
         if(currentFriend!=friendId)
             setUnRead((prevUnRead)=>({
@@ -44,27 +52,45 @@ export default function Container({ userId }){
                 [friendId]: true
             }))
     }
+    function sendReadReq(friendId) {
+        setUnRead((prevUnRead) => {
+            if (prevUnRead[friendId]){ 
+                let obj = {
+                    type: 5,
+                    from: friendId, 
+                    to: friendId,
+                }         
+                websocket.send(obj);
+            }
+            return {
+                ...prevUnRead,
+                [friendId]: false,
+            }
 
-    function toggleFOM() {
-        if (!friendOrMsg)
-            setCurrentFriend("");
-        setFriendOrMsg(!friendOrMsg);
+        })
     }
 
+    const [msgConfirm, setMsgConfirm] = useState({})
 
+
+    /**
+     * @description: add a message to the message list 
+     * @param {*} msg the message string
+     * @param {*} isSent flag for sent or received, if sent, it should be send to current friend
+     * @param {*} friendId if received, indicate from which friend
+     */
     function addMsg(msg, isSent, friendId) {
-        const flag = isSent ? "sent" : "received";
         const friend = isSent ? currentFriend : friendId;
         setMsgMap((prevMsg) => {
             let newMsg = {};
             if (!prevMsg[friend])
                 newMsg = {
                     ...prevMsg,
-                    [friend]:[{[flag]: msg }]
+                    [friend]:[ {isSent, msg }]
                 }
             else {
                 let newList = [...prevMsg[friend]];
-                newList.push({ [flag]: msg });
+                newList.push({ isSent, msg });
                 newMsg = {
                     ...prevMsg,
                     [friend]: newList
@@ -72,11 +98,44 @@ export default function Container({ userId }){
             }
             return newMsg;
         })
+   
+    }
+
+    function sendMsgReq(toUserId, fromUserId, message) {
+        let obj = {
+            type: 3,
+            userId: fromUserId,
+            friendId: toUserId,
+            message: message
+        };
+        websocket.send(obj);
+        let friendId = toUserId;
+        setMsgConfirm((prevMsgConfirm) => {
+            const temp = prevMsgConfirm[friendId] || [];
+            let [confirmed = 0, sentConfirming = 0] = temp;
+            return {
+                ...prevMsgConfirm,
+                [friendId]:[confirmed, sentConfirming+1]
+            }
+
+        })
+        addMsg(message, true, friendId);
     }
 
     useEffect(() => {
         dispatcher.register(msgTypes.friendList,
             (res) =>setFriendList(res.friendList));
+        dispatcher.register(msgTypes.confirmRead,
+            (res) => {
+                let friendId = res.to;
+                setMsgConfirm((prevMsgConfirm) => {
+                    let [confirmed, sentConfirming] = prevMsgConfirm[friendId];
+                    return {
+                        ...prevMsgConfirm,
+                        [friendId]: [confirmed + sentConfirming, 0]
+                    }
+                })
+            });
         let obj = {
             type: msgTypes.friendList,
             userId: userId
@@ -100,14 +159,19 @@ export default function Container({ userId }){
                     friendList={friendList}
                     setCurrentFriend={setCurrentFriend}
                     unRead={unRead}
-                    setUnRead={setUnRead}
+                    setRead={sendReadReq}
                     toggleToMsg={toggleFOM}
                   />
                 : <MessageList
                     msgList={msgMap[currentFriend]}
+                    confirmedReadNum={
+                        msgConfirm[currentFriend]
+                            ? msgConfirm[currentFriend][0]
+                            : 0
+                    }
                     friendId={currentFriend}
                     userId={userId}
-                    addMsg={addMsg}
+                    sendMsgReq={sendMsgReq}
                     toggleToFriend={toggleFOM}
                    />
             }

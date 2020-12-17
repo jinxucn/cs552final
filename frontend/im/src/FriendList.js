@@ -1,22 +1,24 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 20:27:41
- * @LastEditTime: 2020-12-13 19:32:34
+ * @LastEditTime: 2020-12-17 20:29:42
  */
 
 import React, { useState } from "react";
 
-import Friend from './Friend'
+function Friend({friendId, isUnRead, setCurrentFriend }){
 
+    return (
+        <li className={"friend" + (isUnRead ? " friend-unread":"")}
+            onClick={setCurrentFriend}
+        >{friendId}
+        </li>
+    )
 
-export default function FriendList({ friendList, setCurrentFriend, unRead, setUnRead, toggleToMsg}){
+}
 
-    function setRead(friendId) {
-        setUnRead({
-            ...unRead,
-            [friendId]: false
-        })
-    }
+export default function FriendList({ friendList, setCurrentFriend, unRead, setRead, toggleToMsg}){
+
 
     function setCurrentFriendAndRead(friendId) {
         setCurrentFriend(friendId);
