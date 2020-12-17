@@ -6,7 +6,7 @@
 
 const errorResponse = {
     type: -1,
-    reason: "reason"
+    reason: "reason"//message
 }
 
 const heartBeatRequestAndResponse = {
@@ -45,4 +45,41 @@ const sendMsgResponse = {
     type: 3,
     from: "userId",
     message: 'Hello world'
+}
+
+
+
+//from sender to server
+const sendMsgRequest = {
+    type: 3,
+    userId: 'userId',
+    friendId: 'friendId',
+    message: 'Hello world'
+}
+
+//from server to sender
+const sendMsgResponse = {
+    type: 3,
+    status: "success"/"failure"
+}
+
+//from server to receiver
+const forwardMsgRequest = {
+    type: 4,
+    from: "userId",
+    message: 'Hello world'
+}
+
+//from receiver to server
+const forwardMsgResponse = {
+    type: 4,
+    from: "userId",    //message sender id
+    to: "userId"       //message receiver id
+}
+
+//from server to sender
+const readMsgResponse = {
+    type: 5,
+    from: "userId",    //message sender id
+    to: "userId"       //message receiver id
 }

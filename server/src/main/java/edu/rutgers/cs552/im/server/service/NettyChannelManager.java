@@ -1,11 +1,16 @@
 package edu.rutgers.cs552.im.server.service;
 
 // import edu.rutgers.cs552.im.common.codec.Invocation;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import edu.rutgers.cs552.im.server.dao.OfflineDOMapper;
+import edu.rutgers.cs552.im.server.dataobject.OfflineDO;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,6 +41,9 @@ public class NettyChannelManager {
      * 通过它，可以获取用户对应的 Channel。这样，我们可以向指定用户发送消息。
      */
     private ConcurrentMap<String, Channel> userChannels = new ConcurrentHashMap<>();
+
+    @Autowired
+    private OfflineDOMapper offlineDOMapper;
 
     /**
      * 添加 Channel 到 {@link #channels} 中
@@ -104,15 +112,18 @@ public class NettyChannelManager {
     public void send(String user, String msg) {
         // 获得用户对应的 Channel
         Channel channel = userChannels.get(user);
-        if (channel == null) {
+        if (channel == null || !channel.isActive()) {
             logger.error("[send][连接不存在]");
+            JSONObject message = JSON.parseObject(msg);
+            String fromId = message.getString("from");
+            OfflineDO offlineDO = new OfflineDO();
+            offlineDO.setFromID(fromId);
+            offlineDO.setToID(user);
+            offlineDO.setMessage(msg);
+            offlineDO.setIs_sent(0);
+            offlineDOMapper.insert(offlineDO);
             return;
         }
-        if (!channel.isActive()) {
-            logger.error("[send][连接({})未激活]", channel.id());
-            return;
-        }
-        // 发送消息
         channel.writeAndFlush(msg);
     }
 

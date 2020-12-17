@@ -30,7 +30,7 @@ public class FriendDO {
     }
 
     public String getUserID2() {
-        return userID1;
+        return userID2;
     }
 
 

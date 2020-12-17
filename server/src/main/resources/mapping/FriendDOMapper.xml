@@ -9,7 +9,7 @@
     <sql id="Base_Column_List">
         id, userID1, userID2
     </sql>
-    <insert id="insert" parameterType="edu.rutgers.cs552.im.server.dataobject.UserDO">
+    <insert id="insert" parameterType="edu.rutgers.cs552.im.server.dataobject.FriendDO">
         insert into user (id, userID1, userID2)
         values (#{id,jdbcType=INTEGER}, #{userID1,jdbcType=VARCHAR}, #{userID2,jdbcType=VARCHAR})
     </insert>
