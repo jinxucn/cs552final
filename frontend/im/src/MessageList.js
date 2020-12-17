@@ -1,45 +1,31 @@
-r/*
+/*
  * @Author: Jin X
  * @Date: 2020-12-12 18:25:38
- * @LastEditTime: 2020-12-17 20:31:10
+ * @LastEditTime: 2020-12-13 20:09:39
  */
 import React, { useState, useEffect } from 'react';
 
+import Message from './Message';
 
-const MsgInput = ({ onEnter }) => {
-    
+import websocket from './websocket'
+import { dispatcher } from './Dispatcher'
+
+
+
+export default function MessageList({ msgList,  friendId,  userId, addMsg,toggleToFriend}) {
+
     const [inputContent, setInputContent] = useState("");
 
-    return (
-        <input
-            className="message-input"
-            placeholder="Send on Enter"
-            onChange={(e) => setInputContent(e.target.value)}
-            value={inputContent}
-            onKeyDown={(e) => {
-                if (e.keyCode === 13 && e.target.value) {
-                    onEnter(e.target.value);
-                    setInputContent("");
-                }
-                
-            }}
-        />
-    )
-}
-
-function Message({ type, content }){
-    return (
-        <li className="message-wrap">
-            <div className={"message "+type}>{content}</div>
-        </li>
-    )
-}
-
-
-export default function MessageList({ msgList, confirmedReadNum,  friendId,  userId, sendMsgReq,toggleToFriend}) {
-    
-    
-
+    function sendMsgReq(toUserId, fromUserId, message) {
+        let obj = {
+            type: 3,
+            userId: fromUserId,
+            friendId: toUserId,
+            message: message
+        };
+        websocket.send(obj);
+        addMsg(message, true, friendId);
+    }
     useEffect(() => {
             let ele = document.querySelector(".message-list");
             ele.scrollTop = ele.scrollHeight;
@@ -54,20 +40,9 @@ export default function MessageList({ msgList, confirmedReadNum,  friendId,  use
                 className="message-friend"
             >{friendId}</h2>
             <ul className="message-list">{
-                
                 msgList && msgList.map((msg,i)=> {
-                    let type = null;
-                    if (!msg.isSent)
-                        type = "message-received";
-                    else {
-                        type = "message-sent";
-                        if (confirmedReadNum <= 0)
-                            type += " message-unread"
-                        else
-                            type += " message-read"
-                        confirmedReadNum--;
-                    }
-                    let content = msg.msg;
+                    let type = msg["sent"] ? "sent" : "received";
+                    let content = msg[type];
                     return(
                     <Message
                         key={""+friendId+i}
@@ -76,7 +51,19 @@ export default function MessageList({ msgList, confirmedReadNum,  friendId,  use
                     />)
                 })
             }</ul>
-            <MsgInput onEnter={(val)=>sendMsgReq(friendId, userId,val)} />
+            <input
+                className="message-input"
+                placeholder="Send on Enter"
+                onChange={(e) => setInputContent(e.target.value)}
+                value={inputContent}
+                onKeyDown={(e) => {
+                    if (e.keyCode === 13 && e.target.value) {
+                        sendMsgReq(friendId, userId, e.target.value)
+                        setInputContent("");
+                    }
+
+                }}
+            />
         </div>
     )
 
