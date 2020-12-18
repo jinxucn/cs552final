@@ -134,7 +134,7 @@ public class MessageHandler{
 
 
     private void handleReadMsgReq(Channel channel, JSONObject message){
-        String receiver = channel.id().toString();
+        String receiver = message.getString("to");;
         String sender = message.getString("from");
         JSONObject response = new JSONObject();
         response.put("type", 5);
