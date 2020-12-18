@@ -1,7 +1,7 @@
 /*
  * @Author: Jin X
  * @Date: 2020-12-12 20:36:10
- * @LastEditTime: 2020-12-17 20:52:50
+ * @LastEditTime: 2020-12-18 13:35:34
  */
 import React, { useEffect, useState } from "react";
 
@@ -67,7 +67,7 @@ export default function Container({ userId }){
                 let obj = {
                     type: 5,
                     from: friendId, 
-                    to: friendId,
+                    to: userId,
                 }         
                 websocket.send(obj);
             }
