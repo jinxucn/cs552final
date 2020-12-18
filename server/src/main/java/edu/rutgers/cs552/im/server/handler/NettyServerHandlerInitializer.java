@@ -36,7 +36,6 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
 
     @Override
     protected void initChannel(Channel ch) {
-        System.out.println("-----------------------SUCCESS!!!!!!!!-----------------------");
         // 获得 Channel 对应的 ChannelPipeline
         ChannelPipeline channelPipeline = ch.pipeline();
         // 添加一堆 NettyServerHandler 到 ChannelPipeline 中

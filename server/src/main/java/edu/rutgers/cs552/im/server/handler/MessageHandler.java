@@ -98,9 +98,6 @@ public class MessageHandler{
             for(FriendDO f: friends){
                 String id1 = f.getUserID1();
                 String id2 = f.getUserID2();
-                System.out.println(userid);
-                System.out.println(id1);
-                System.out.println(id2);
                 if(id1.equals(userid.toLowerCase())){
                     friendList.add(id2);
                 }
