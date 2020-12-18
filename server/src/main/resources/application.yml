@@ -1,5 +1,5 @@
 netty:
-  port: 8888 # Netty Server 端口
+  port: 8888 # Netty Server port
 mybatis:
   mapperLocations: classpath:mapping/*.xml
   type-aliases-package: com.springboot.springbootmybatisxml.model

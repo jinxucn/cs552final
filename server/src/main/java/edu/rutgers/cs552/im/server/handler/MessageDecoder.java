@@ -15,28 +15,28 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        // 标记当前读取位置
+        // mark Current readableBytes
         in.markReaderIndex();
-        // 判断是否能够读取 length 长度
+        // if the length is readable
         if (in.readableBytes() <= 4) {
             return;
         }
-        // 读取长度
+        // read length
         int length = in.readInt();
         if (length < 0) {
             throw new CorruptedFrameException("negative length: " + length);
         }
-        // 如果 message 不够可读，则退回到原读取位置
+        // if length unreadable, go back to the beginning places
         if (in.readableBytes() < length) {
             in.resetReaderIndex();
             return;
         }
-        // 读取内容
+        // read content
         byte[] content = new byte[length];
         in.readBytes(content);
-        // 解析成 Invocation
+        // stringify
         String msg = new String(content);
         out.add(msg);
-        logger.info("[decode][连接({}) 解析到一条消息({})]", ctx.channel().id(), msg);
+        logger.info("[decode][channel({}) decode({})]", ctx.channel().id(), msg);
     }
 }

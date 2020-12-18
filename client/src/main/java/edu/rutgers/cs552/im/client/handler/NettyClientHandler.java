@@ -27,24 +27,24 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        // 发起重连
+        // reconnect link
         nettyClient.reconnect();
-        // 继续触发事件
+        // invoke the following channel handler
         super.channelInactive(ctx);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("[exceptionCaught][连接({}) 发生异常]", ctx.channel().id(), cause);
-        // 断开连接
+        logger.error("[exceptionCaught][channel({}) error]", ctx.channel().id(), cause);
+        // close link
         ctx.channel().close();
     }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object event) throws Exception {
-        // 空闲时，向服务端发起一次心跳
+        // send a heartbeat when pipeline is empty
         if (event instanceof IdleStateEvent) {
-            logger.info("[userEventTriggered][发起一次心跳]");
+            logger.info("[userEventTriggered][send a heartbeat]");
             JSONObject request = new JSONObject();
             request.put("type", 0);
             ctx.writeAndFlush(request.toJSONString());

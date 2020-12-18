@@ -18,9 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NettyClientHandlerInitializer extends ChannelInitializer<Channel> {
 
-    /**
-     * 心跳超时时间
-     */
+    // the timeout for heartbeat
     private static final Integer READ_TIMEOUT_SECONDS = 60;
 
     // @Autowired
@@ -35,18 +33,17 @@ public class NettyClientHandlerInitializer extends ChannelInitializer<Channel> {
     @Override
     protected void initChannel(Channel ch) {
         ch.pipeline()
-                // 空闲检测
+                // idle
                 .addLast(new IdleStateHandler(READ_TIMEOUT_SECONDS, 0, 0))
                 .addLast(new ReadTimeoutHandler(3 * READ_TIMEOUT_SECONDS))
-                // 编码器
+                // encode
                 .addLast(new MessageEncoder())
-                // 解码器
+                // decode
                 .addLast(new MessageDecoder())
-                // 消息分发器
                 // .addLast(messageDispatcher)
-                // 前端webSocket接口
+                // redirect to webSocket
                 .addLast(nettyToFrontEndHandler)
-                // 客户端处理器
+                // main client logic
                 .addLast(nettyClientHandler)
         ;
     }

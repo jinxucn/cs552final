@@ -56,7 +56,6 @@ public class WebSocketInterface{
 
     @OnMessage
     public void onMessage(String message) throws IOException{
-        // // 发送消息
         logger.info("WebSocket send to nettyClient: "+message);
         nettyClient.send(message);
     }

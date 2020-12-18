@@ -20,9 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
 
-    /**
-     * 心跳超时时间
-     */
+    // the timeout for heartbeat
     private static final Integer READ_TIMEOUT_SECONDS = 3 * 60;
 
     // @Autowired
@@ -36,21 +34,18 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
 
     @Override
     protected void initChannel(Channel ch) {
-        // 获得 Channel 对应的 ChannelPipeline
         ChannelPipeline channelPipeline = ch.pipeline();
-        // 添加一堆 NettyServerHandler 到 ChannelPipeline 中
+
         channelPipeline
-                // 空闲检测
+                // idle
                 .addLast(new ReadTimeoutHandler(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS))
-                // 编码器
+                // encode
                 .addLast(new MessageEncoder())
-                // 解码器
+                // decode
                 .addLast(new MessageDecoder())
-                // 消息分发器
-                // .addLast(messageDispatcher)
-                // 后端Dao接口
+                // msg to Dao
                 .addLast(nettyToDaoHandler)
-                // 服务端处理器
+                // main client logic
                 .addLast(nettyServerHandler)
         ;
     }

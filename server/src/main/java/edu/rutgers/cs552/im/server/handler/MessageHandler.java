@@ -146,27 +146,27 @@ public class MessageHandler{
 
         switch(type){
             case 0: // heartbeat
-                logger.info("[execute][收到连接({}) 的心跳请求]", channel.id());
+                logger.info("[execute][channel({}) heartbeat request]", channel.id());
                 handleHeartbeat(channel, message);
                 break;
 
             case 1: // auth
-                logger.info("[execute][收到连接({}) 的认证请求]", channel.id());
+                logger.info("[execute][channel({}) auth request]", channel.id());
                 handleAuthReq(channel, message);
                 break;
 
             case 2: // friend list
-                logger.info("[execute][收到连接({}) 的获取列表请求]", channel.id());
+                logger.info("[execute][channel({}) list request]", channel.id());
                 handleFriendListReq(channel, message);
                 break;
 
             case 3: // send message
-                logger.info("[execute][收到连接({}) 的发送消息请求]", channel.id());
+                logger.info("[execute][channel({}) message send request]", channel.id());
                 handleSendMsgReq(channel, message);
                 break;
 
             case 5:
-                logger.info("[execute][收到连接({}) 的发送消息请求]", channel.id());
+                logger.info("[execute][channel({}) message read request]", channel.id());
                 handleReadMsgReq(channel, message);
                 break;
             case -1: // error
