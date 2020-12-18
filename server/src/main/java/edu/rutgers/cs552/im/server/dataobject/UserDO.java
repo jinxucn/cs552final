@@ -1,6 +1,6 @@
 package edu.rutgers.cs552.im.server.dataobject;
 
-
+// dao for user
 public class UserDO {
     private Integer id;
 

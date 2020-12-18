@@ -1,6 +1,5 @@
 package edu.rutgers.cs552.im.server.service;
 
-// import edu.rutgers.cs552.im.common.codec.Invocation;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import edu.rutgers.cs552.im.server.dao.OfflineDOMapper;
@@ -17,100 +16,52 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * 客户端 Channel 管理器。提供两种功能：
- * 1. 客户端 Channel 的管理
- * 2. 向客户端 Channel 发送消息
+ * manage the channel to different clients
+ * send msg to specific client
  */
 @Component
 public class NettyChannelManager {
 
-    /**
-     * {@link Channel#attr(AttributeKey)} 属性中，表示 Channel 对应的用户
-     */
-    private static final AttributeKey<String> CHANNEL_ATTR_KEY_USER = AttributeKey.newInstance("user");
+    private static final AttributeKey<String> UserAttribute = AttributeKey.newInstance("user");
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    /**
-     * Channel 映射
-     */
+    // two mapping, channels for all connection, users for users
     private ConcurrentMap<ChannelId, Channel> channels = new ConcurrentHashMap<>();
-    /**
-     * 用户与 Channel 的映射。
-     *
-     * 通过它，可以获取用户对应的 Channel。这样，我们可以向指定用户发送消息。
-     */
     private ConcurrentMap<String, Channel> userChannels = new ConcurrentHashMap<>();
 
     @Autowired
     private OfflineDOMapper offlineDOMapper;
 
-    /**
-     * 添加 Channel 到 {@link #channels} 中
-     *
-     * @param channel Channel
-     */
     public void add(Channel channel) {
         channels.put(channel.id(), channel);
-        logger.info("[add][一个连接({})加入]", channel.id());
+        logger.info("[add][channel ({})]", channel.id());
     }
 
-    /**
-     * 添加指定用户到 {@link #userChannels} 中
-     *
-     * @param channel Channel
-     * @param user 用户
-     */
     public void addUser(Channel channel, String user) {
         Channel existChannel = channels.get(channel.id());
         if (existChannel == null) {
-            logger.error("[addUser][连接({}) 不存在]", channel.id());
+            logger.error("[addUser][channel({}) is not exist]", channel.id());
             return;
         }
-        // 设置属性
-        channel.attr(CHANNEL_ATTR_KEY_USER).set(user);
-        // 添加到 userChannels
+        channel.attr(UserAttribute).set(user);
+        // add to users
         userChannels.put(user, channel);
     }
 
-    /**
-     * 将 Channel 从 {@link #channels} 和 {@link #userChannels} 中移除
-     *
-     * @param channel Channel
-     */
     public void remove(Channel channel) {
-        // 移除 channels
+        // remove channels
         channels.remove(channel.id());
-        // 移除 userChannels
-        if (channel.hasAttr(CHANNEL_ATTR_KEY_USER)) {
-            userChannels.remove(channel.attr(CHANNEL_ATTR_KEY_USER).get());
+        // if is is also in users, then remove too
+        if (channel.hasAttr(UserAttribute)) {
+            userChannels.remove(channel.attr(UserAttribute).get());
         }
-        logger.info("[remove][一个连接({})离开]", channel.id());
+        logger.info("[remove][channel({})close]", channel.id());
     }
 
-    /**
-     * 向指定用户发送消息
-     *
-     * @param user 用户
-     * @param *invocation 消息体
-     */
-    // public void send(String user, Invocation invocation) {
-    //     // 获得用户对应的 Channel
-    //     Channel channel = userChannels.get(user);
-    //     if (channel == null) {
-    //         logger.error("[send][连接不存在]");
-    //         return;
-    //     }
-    //     if (!channel.isActive()) {
-    //         logger.error("[send][连接({})未激活]", channel.id());
-    //         return;
-    //     }
-    //     // 发送消息
-    //     channel.writeAndFlush(invocation);
-    // }
 
     public void send(String user, String msg) {
-        // 获得用户对应的 Channel
+        // send msg to user 
         Channel channel = userChannels.get(user);
         if (channel == null || !channel.isActive()) {
             logger.error("[send][连接不存在]");
@@ -127,37 +78,6 @@ public class NettyChannelManager {
         channel.writeAndFlush(msg);
     }
 
-    /**
-     * 向所有用户发送消息
-     *
-     * @param /invocation 消息体
-     */
-    // public void sendAll(Invocation invocation) {
-    //     for (Channel channel : channels.values()) {
-    //         if (!channel.isActive()) {
-    //             logger.error("[send][连接({})未激活]", channel.id());
-    //             return;
-    //         }
-    //         // 发送消息
-    //         channel.writeAndFlush(invocation);
-    //     }
-    // }
-    public void sendAll(String msg) {
-        for (Channel channel : channels.values()) {
-            if (!channel.isActive()) {
-                logger.error("[send][连接({})未激活]", channel.id());
-                return;
-            }
-            // 发送消息
-            channel.writeAndFlush(msg);
-        }
-    }
-
-    /**
-     * 查找用户是否在线
-     *
-     * @param user 用户
-     */
     public boolean isActive(String user){
         return userChannels.containsKey(user)&&userChannels.get(user).isActive();
     }

@@ -1,9 +1,3 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-12 17:19:07
- * @LastEditTime: 2020-12-17 20:53:33
- */
-
 import {handlers} from './Dispatcher'
 
 if (!window.WebSocket)

@@ -1,9 +1,6 @@
 package edu.rutgers.cs552.im.client.handler;
 
 import edu.rutgers.cs552.im.client.service.NettyClient;
-// import edu.rutgers.cs552.im.client.message.heartbeat.HeartbeatRequest;
-// import edu.rutgers.cs552.im.common.codec.Invocation;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -12,10 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+/**
+ * handle when channel lost, reconnect or on error
+ */
 @Component
 @ChannelHandler.Sharable
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
@@ -27,28 +25,27 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        // 发起重连
+        // reconnect link
         nettyClient.reconnect();
-        // 继续触发事件
+        // invoke the following channel handler
         super.channelInactive(ctx);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("[exceptionCaught][连接({}) 发生异常]", ctx.channel().id(), cause);
-        // 断开连接
+        logger.error("[exceptionCaught][link({}) error]", ctx.channel().id(), cause);
+        // close link
         ctx.channel().close();
     }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object event) throws Exception {
-        // 空闲时，向服务端发起一次心跳
+        // send a heartbeat when pipeline is empty
         if (event instanceof IdleStateEvent) {
-            logger.info("[userEventTriggered][发起一次心跳]");
+            logger.info("[userEventTriggered][send a heartbeat]");
             JSONObject request = new JSONObject();
             request.put("type", 0);
             ctx.writeAndFlush(request.toJSONString());
-                    // .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         } else {
             super.userEventTriggered(ctx, event);
         }

@@ -1,8 +1,4 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-12 16:25:09
- * @LastEditTime: 2020-12-13 20:22:03
- */
+
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 

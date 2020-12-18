@@ -1,5 +1,6 @@
 package edu.rutgers.cs552.im.server.dataobject;
 
+// dao for offline storage and latter push
 public class OfflineDO {
     private Integer id;
 

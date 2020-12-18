@@ -1,7 +1,6 @@
 package edu.rutgers.cs552.im.client.service;
 
 import edu.rutgers.cs552.im.client.handler.NettyClientHandlerInitializer;
-// import edu.rutgers.cs552.im.common.codec.Invocation;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,10 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class NettyClient {
 
-    /**
-     * 重连频率，单位：秒
-     */
-    private static final Integer RECONNECT_SECONDS = 20;
+    private static final Integer ReconnectTimeout = 20; // for reconnect timeout
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -31,49 +27,39 @@ public class NettyClient {
     @Value("${netty.server.port}")
     private Integer serverPort;
 
-    // @Resource
-    // private ApplicationArguments arguments;
 
     @Autowired
     private NettyClientHandlerInitializer nettyClientHandlerInitializer;
 
-    /**
-     * 线程组，用于客户端对服务端的链接、数据读写
-     */
+    
     private EventLoopGroup eventGroup = new NioEventLoopGroup();
-    /**
-     * Netty Client Channel
-     */
     private volatile Channel channel;
 
     /**
-     * 启动 Netty Client
+     * start Netty Client
      */
     @PostConstruct
     public void start() throws InterruptedException {
-        // 创建 Bootstrap 对象，用于 Netty Client 启动
+        // define bootstrap, and some configures
         Bootstrap bootstrap = new Bootstrap();
-        // 设置 Bootstrap 的各种属性。
-        bootstrap.group(eventGroup) // 设置一个 EventLoopGroup 对象
-                .channel(NioSocketChannel.class)  // 指定 Channel 为客户端 NioSocketChannel
-                .remoteAddress(serverHost, serverPort) // 指定链接服务器的地址
-                .option(ChannelOption.SO_KEEPALIVE, true) // TCP Keepalive 机制，实现 TCP 层级的心跳保活功能
-                .option(ChannelOption.TCP_NODELAY, true) // 允许较小的数据包的发送，降低延迟
+        bootstrap.group(eventGroup) 
+                .channel(NioSocketChannel.class)  
+                .remoteAddress(serverHost, serverPort) 
+                .option(ChannelOption.SO_KEEPALIVE, true) // for alive tcp
+                .option(ChannelOption.TCP_NODELAY, true)  // for small packets
                 .handler(nettyClientHandlerInitializer);
-        // 链接服务器，并异步等待成功，即启动客户端
+        // future listener for connection status
         bootstrap.connect().addListener(new ChannelFutureListener() {
 
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
-                // 连接失败
                 if (!future.isSuccess()) {
-                    logger.error("[start][Netty Client 连接服务器({}:{}) 失败]", serverHost, serverPort);
+                    logger.error("[start][Netty Client connect to server at({}:{}) fail]", serverHost, serverPort);
                     reconnect();
                     return;
                 }
-                // 连接成功
                 channel = future.channel();
-                logger.info("[start][Netty Client 连接服务器({}:{}) 成功]", serverHost, serverPort);
+                logger.info("[start][Netty Client connect to server at({}:{}) success]", serverHost, serverPort);
             }
 
         });
@@ -83,60 +69,39 @@ public class NettyClient {
         eventGroup.schedule(new Runnable() {
             @Override
             public void run() {
-                logger.info("[reconnect][开始重连]");
+                logger.info("[reconnect][start]");
                 try {
                     start();
                 } catch (InterruptedException e) {
-                    logger.error("[reconnect][重连失败]", e);
+                    logger.error("[reconnect][fail]", e);
                 }
             }
-        }, RECONNECT_SECONDS, TimeUnit.SECONDS);
-        logger.info("[reconnect][{} 秒后将发起重连]", RECONNECT_SECONDS);
+        }, ReconnectTimeout, TimeUnit.SECONDS);
+        logger.info("[reconnect][in {} s]", ReconnectTimeout);
     }
 
-    /**
-     * 关闭 Netty Server
-     */
     @PreDestroy
     public void shutdown() {
-        // 关闭 Netty Client
+        // close the channel
         if (channel != null) {
             channel.close();
         }
-        // 优雅关闭一个 EventLoopGroup 对象
+        // shutdown safely
         eventGroup.shutdownGracefully();
     }
 
-    /**
-     * 发送消息
-     *
-     * @param invocation 消息体
-     */
 
     public void send(String msg){
         if (channel == null) {
-            logger.error("[send][连接不存在]");
+            logger.error("[send][channel is not exist]");
             return;
         }
         if (!channel.isActive()) {
-            logger.error("[send][连接({})未激活]", channel.id());
+            logger.error("[send][channel({})is not active]", channel.id());
             return;
         }
-        // 发送消息
+        // send msg to pipeline
         channel.writeAndFlush(msg);
     }
     
-    // public void send(Invocation invocation) {
-    //     if (channel == null) {
-    //         logger.error("[send][连接不存在]");
-    //         return;
-    //     }
-    //     if (!channel.isActive()) {
-    //         logger.error("[send][连接({})未激活]", channel.id());
-    //         return;
-    //     }
-    //     // 发送消息
-    //     channel.writeAndFlush(invocation);
-    // }
-
 }

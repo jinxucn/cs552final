@@ -1,8 +1,4 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-13 14:43:51
- * @LastEditTime: 2020-12-13 16:18:45
- */
+
 
 imRec(JSON.stringify({type:1,request:"accept"}))
 

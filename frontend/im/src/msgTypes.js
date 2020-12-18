@@ -1,8 +1,4 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-12 21:30:10
- * @LastEditTime: 2020-12-12 21:47:16
- */
+
 
 const errorResponse = {
     type: -1,

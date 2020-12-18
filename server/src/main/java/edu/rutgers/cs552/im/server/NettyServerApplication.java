@@ -1,8 +1,3 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-11 12:04:34
- * @LastEditTime: 2020-12-11 12:05:02
- */
 package edu.rutgers.cs552.im.server;
 
 
@@ -20,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @MapperScan(basePackages = "edu.rutgers.cs552.im.server.dao")
 public class NettyServerApplication {
 
+
+    // main entry, start as a spring boot app
     public static void main(String[] args) {
         SpringApplication.run(NettyServerApplication.class, args);
     }

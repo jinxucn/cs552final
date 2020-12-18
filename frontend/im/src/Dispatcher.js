@@ -1,8 +1,4 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-12 17:29:41
- * @LastEditTime: 2020-12-17 19:05:12
- */
+
 
 const msgTypes = {
     // error: -1,

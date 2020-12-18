@@ -1,8 +1,4 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-12 18:25:38
- * @LastEditTime: 2020-12-17 20:31:10
- */
+
 import React, { useState, useEffect } from 'react';
 
 

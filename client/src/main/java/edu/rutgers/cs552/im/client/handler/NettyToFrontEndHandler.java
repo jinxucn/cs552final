@@ -1,9 +1,3 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-11 22:14:21
- * @LastEditTime: 2020-12-11 23:29:01
- */
-
 package edu.rutgers.cs552.im.client.handler;
 
 import edu.rutgers.cs552.im.client.websocket.WebSocketInterface;

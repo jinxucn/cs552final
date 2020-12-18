@@ -1,8 +1,4 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-12 22:49:37
- * @LastEditTime: 2020-12-16 18:39:36
- */
+
 import React, { useState, useEffect } from 'react';
 
 import websocket from './websocket'

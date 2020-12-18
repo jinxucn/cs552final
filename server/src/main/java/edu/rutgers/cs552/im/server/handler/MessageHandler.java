@@ -1,9 +1,3 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-11 22:43:25
- * @LastEditTime: 2020-12-11 23:51:52
- */
-
 package edu.rutgers.cs552.im.server.handler;
 
 import com.alibaba.fastjson.JSON;
@@ -17,14 +11,12 @@ import edu.rutgers.cs552.im.server.dataobject.OfflineDO;
 import edu.rutgers.cs552.im.server.dataobject.UserDO;
 import edu.rutgers.cs552.im.server.service.NettyChannelManager;
 
-import io.netty.channel.ChannelId;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 

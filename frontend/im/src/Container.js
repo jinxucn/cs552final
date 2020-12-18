@@ -1,8 +1,3 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-12 20:36:10
- * @LastEditTime: 2020-12-18 13:35:34
- */
 import React, { useEffect, useState } from "react";
 
 import FriendList from './FriendList'

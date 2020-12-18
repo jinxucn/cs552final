@@ -1,5 +1,6 @@
 package edu.rutgers.cs552.im.server.dataobject;
 
+// dao for friend
 public class FriendDO {
 
     private Integer id;

@@ -1,8 +1,3 @@
-/*
- * @Author: Jin X
- * @Date: 2020-12-11 21:06:13
- * @LastEditTime: 2020-12-11 21:13:40
- */
 package edu.rutgers.cs552.im.server.service;
 
 import edu.rutgers.cs552.im.server.handler.NettyServerHandlerInitializer;
@@ -34,54 +29,42 @@ public class NettyServer {
     @Autowired
     private NettyServerHandlerInitializer nettyServerHandlerInitializer;
 
-    /**
-     * boss 线程组，用于服务端接受客户端的连接
-     */
-    private EventLoopGroup bossGroup = new NioEventLoopGroup();
-    /**
-     * worker 线程组，用于服务端接受客户端的数据读写
-     */
-    private EventLoopGroup workerGroup = new NioEventLoopGroup();
-    /**
-     * Netty Server Channel
-     */
+    private EventLoopGroup boss = new NioEventLoopGroup();
+    private EventLoopGroup worker = new NioEventLoopGroup();
+
     private Channel channel;
 
     /**
-     * 启动 Netty Server
+     * start Netty Server
      */
     @PostConstruct
     public void start() throws InterruptedException {
-        // 创建 ServerBootstrap 对象，用于 Netty Server 启动
+        // define bootstrap, and some configures
         ServerBootstrap bootstrap = new ServerBootstrap();
-        // 设置 ServerBootstrap 的各种属性
-        bootstrap.group(bossGroup, workerGroup) // 设置两个 EventLoopGroup 对象
-                .channel(NioServerSocketChannel.class)  // 指定 Channel 为服务端 NioServerSocketChannel
-                .localAddress(new InetSocketAddress(port)) // 设置 Netty Server 的端口
-                .option(ChannelOption.SO_BACKLOG, 1024) // 服务端 accept 队列的大小
-                .childOption(ChannelOption.SO_KEEPALIVE, true) // TCP Keepalive 机制，实现 TCP 层级的心跳保活功能
-                .childOption(ChannelOption.TCP_NODELAY, true) // 允许较小的数据包的发送，降低延迟
+        bootstrap.group(boss, worker) 
+                .channel(NioServerSocketChannel.class)  
+                .localAddress(new InetSocketAddress(port)) 
+                .option(ChannelOption.SO_BACKLOG, 1024) 
+                .childOption(ChannelOption.SO_KEEPALIVE, true) // for alive tcp
+                .childOption(ChannelOption.TCP_NODELAY, true)  // for small packets
                 .childHandler(nettyServerHandlerInitializer);
-        // 绑定端口，并同步等待成功，即启动服务端
+        // future listener for connection status
         ChannelFuture future = bootstrap.bind().sync();
         if (future.isSuccess()) {
             channel = future.channel();
-            logger.info("[start][Netty Server 启动在 {} 端口]", port);
+            logger.info("[start][Netty Server start at port{}]", port);
         }
     }
 
-    /**
-     * 关闭 Netty Server
-     */
     @PreDestroy
     public void shutdown() {
-        // 关闭 Netty Server
+        // close channel
         if (channel != null) {
             channel.close();
         }
-        // 优雅关闭两个 EventLoopGroup 对象
-        bossGroup.shutdownGracefully();
-        workerGroup.shutdownGracefully();
+        // shutdown safely
+        boss.shutdownGracefully();
+        worker.shutdownGracefully();
     }
 
 }
