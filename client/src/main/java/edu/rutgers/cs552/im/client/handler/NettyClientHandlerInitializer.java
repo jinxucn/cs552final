@@ -39,9 +39,9 @@ public class NettyClientHandlerInitializer extends ChannelInitializer<Channel> {
                 .addLast(new IdleStateHandler(READ_TIMEOUT_SECONDS, 0, 0))
                 .addLast(new ReadTimeoutHandler(3 * READ_TIMEOUT_SECONDS))
                 // 编码器
-                // .addLast(new InvocationEncoder())
+                .addLast(new MessageEncoder())
                 // 解码器
-                // .addLast(new InvocationDecoder())
+                .addLast(new MessageDecoder())
                 // 消息分发器
                 // .addLast(messageDispatcher)
                 // 前端webSocket接口

@@ -12,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Component
 @ChannelHandler.Sharable
@@ -42,8 +45,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         // 空闲时，向服务端发起一次心跳
         if (event instanceof IdleStateEvent) {
             logger.info("[userEventTriggered][发起一次心跳]");
-            // HeartbeatRequest heartbeatRequest = new HeartbeatRequest();
-            // ctx.writeAndFlush(new Invocation(HeartbeatRequest.TYPE, heartbeatRequest))
+            JSONObject request = new JSONObject();
+            request.put("type", 0);
+            ctx.writeAndFlush(request.toJSONString());
                     // .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         } else {
             super.userEventTriggered(ctx, event);

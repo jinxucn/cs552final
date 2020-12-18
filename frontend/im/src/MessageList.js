@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 
 
 const MsgInput = ({ onEnter }) => {
-    
+
     const [inputContent, setInputContent] = useState("");
 
     return (
@@ -21,7 +21,7 @@ const MsgInput = ({ onEnter }) => {
                     onEnter(e.target.value);
                     setInputContent("");
                 }
-                
+
             }}
         />
     )
@@ -37,12 +37,12 @@ function Message({ type, content }){
 
 
 export default function MessageList({ msgList, confirmedReadNum,  friendId,  userId, sendMsgReq,toggleToFriend}) {
-    
-    
+
+
 
     useEffect(() => {
-            let ele = document.querySelector(".message-list");
-            ele.scrollTop = ele.scrollHeight;
+        let ele = document.querySelector(".message-list");
+        ele.scrollTop = ele.scrollHeight;
     })
     return (
         <div>
@@ -54,7 +54,7 @@ export default function MessageList({ msgList, confirmedReadNum,  friendId,  use
                 className="message-friend"
             >{friendId}</h2>
             <ul className="message-list">{
-                
+
                 msgList && msgList.map((msg,i)=> {
                     let type = null;
                     if (!msg.isSent)
@@ -69,11 +69,11 @@ export default function MessageList({ msgList, confirmedReadNum,  friendId,  use
                     }
                     let content = msg.msg;
                     return(
-                    <Message
-                        key={""+friendId+i}
-                        type={type}
-                        content={content}
-                    />)
+                        <Message
+                            key={""+friendId+i}
+                            type={type}
+                            content={content}
+                        />)
                 })
             }</ul>
             <MsgInput onEnter={(val)=>sendMsgReq(friendId, userId,val)} />
