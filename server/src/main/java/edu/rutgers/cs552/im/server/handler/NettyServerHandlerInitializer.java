@@ -36,6 +36,7 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
 
     @Override
     protected void initChannel(Channel ch) {
+        System.out.println("-----------------------SUCCESS!!!!!!!!-----------------------");
         // 获得 Channel 对应的 ChannelPipeline
         ChannelPipeline channelPipeline = ch.pipeline();
         // 添加一堆 NettyServerHandler 到 ChannelPipeline 中
@@ -43,9 +44,9 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
                 // 空闲检测
                 .addLast(new ReadTimeoutHandler(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS))
                 // 编码器
-                // .addLast(new InvocationEncoder())
+                .addLast(new MessageEncoder())
                 // 解码器
-                // .addLast(new InvocationDecoder())
+                .addLast(new MessageDecoder())
                 // 消息分发器
                 // .addLast(messageDispatcher)
                 // 后端Dao接口

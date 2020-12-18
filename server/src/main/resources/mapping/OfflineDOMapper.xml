@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.rutgers.cs552.im.server.dao.OfflineDOMapper">
+    <resultMap id="BaseResultMap" type="edu.rutgers.cs552.im.server.dataobject.OfflineDO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="fromID" jdbcType="VARCHAR" property="fromID" />
+        <result column="toID" jdbcType="VARCHAR" property="toID" />
+        <result column="message" jdbcType="VARCHAR" property="message" />
+        <result column="is_sent" jdbcType="INTEGER" property="is_sent" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, fromID, toID, message, is_sent
+    </sql>
+    <insert id="insert" parameterType="edu.rutgers.cs552.im.server.dataobject.OfflineDO">
+        insert into offline (fromID, toID, message, is_sent)
+        values (#{fromID,jdbcType=VARCHAR}, #{toID,jdbcType=VARCHAR},
+        #{message,jdbcType=VARCHAR}, #{is_sent,jdbcType=INTEGER})
+    </insert>
+
+    <select id="selectByToID" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from offline where toID = #{toID,jdbcType=VARCHAR} and is_sent = 0
+    </select>
+
+    <delete id="deleteByToId" parameterType="java.lang.String">
+        delete from offline
+        where toID = #{toID,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

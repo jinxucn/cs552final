@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.rutgers.cs552.im.server.dao.FriendDOMapper">
+    <resultMap id="BaseResultMap" type="edu.rutgers.cs552.im.server.dataobject.FriendDO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="userID1" jdbcType="VARCHAR" property="userID1" />
+        <result column="userID2" jdbcType="VARCHAR" property="userID2" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, userID1, userID2
+    </sql>
+    <insert id="insert" parameterType="edu.rutgers.cs552.im.server.dataobject.FriendDO">
+        insert into user (id, userID1, userID2)
+        values (#{id,jdbcType=INTEGER}, #{userID1,jdbcType=VARCHAR}, #{userID2,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selectByUserID" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from friend
+        <where>
+            <if test="userID1 != null">
+                userID1 = #{userID,jdbcType=VARCHAR}
+            </if>
+            <if test="userID2 != null">
+                or userID2 = #{userID,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -5,8 +5,6 @@
  */
 package edu.rutgers.cs552.im.server.handler;
 
-import edu.rutgers.cs552.im.server.dao.Dao;
-
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -18,15 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 @ChannelHandler.Sharable
-public class NettyToDaoHandler extends SimpleChannelInboundHandler {
+public class NettyToDaoHandler extends SimpleChannelInboundHandler<String> {
 
     
     @Autowired    
-    private Dao dao;
+    private MessageHandler handler;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         
-        dao.handleMessage(ctx.channel(), String.valueOf(msg));
+        handler.handleMessage(ctx.channel(), msg);
     }
 }
